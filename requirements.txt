@@ -1,0 +1,10 @@
+requests
+numpy
+scipy
+Pillow>=11,<13
+arabic-reshaper
+python-bidi
+moviepy>=2,<3
+google-api-python-client
+google-auth
+google-auth-oauthlib
