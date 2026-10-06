@@ -28,10 +28,14 @@ from waveform_video import make_waveform_video
 # --------------------------------------------------------------------------
 # إعدادات — عدّل AUDIO_URL ليشير لرابط تحميل مباشر لملف Release الخاص بك
 # --------------------------------------------------------------------------
-AUDIO_URL = "https://github.com/hattabim17-dotcom/QURAN/releases/download/v1/Full_QURAN.mp3"
+AUDIO_URL = "https://github.com/USERNAME/REPO/releases/download/v1/khatma-alaa-aqel-full.mp3"
 
 BASE_DIR = Path(__file__).resolve().parent
-FONT_PATH = str(BASE_DIR / "assets" / "NotoNaskhArabic-Bold.ttf")
+FONTS = {
+    "amiri_quran": str(BASE_DIR / "assets" / "AmiriQuran.ttf"),
+    "amiri_bold": str(BASE_DIR / "assets" / "Amiri-Bold.ttf"),
+    "amiri_regular": str(BASE_DIR / "assets" / "Amiri-Regular.ttf"),
+}
 PROGRESS_PATH = BASE_DIR / "quran_progress.json"
 
 TARGET_SECONDS = 600.0     # ~10 دقائق لكل فيديو
@@ -185,9 +189,8 @@ def main():
         extract_segment(AUDIO_URL, cursor, cut, segment_path)
 
         part_number = progress["videos"] + 1
-        part_label = f"الجزء رقم {part_number} — الدورة {progress['cycle']}"
-        log.info(f"🎬 بناء الفيديو: {part_label}")
-        make_waveform_video(segment_path, FONT_PATH, TITLE_TEXT, part_label, video_path)
+        log.info(f"🎬 بناء الفيديو (الجزء رقم {part_number} — الدورة {progress['cycle']}، للاستخدام الداخلي فقط)")
+        make_waveform_video(segment_path, FONTS, RECITER_NAME, video_path)
 
         title = f"{TITLE_TEXT} — {RECITER_NAME} | الجزء {part_number}"
         description = (
