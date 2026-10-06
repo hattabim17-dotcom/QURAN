@@ -45,6 +45,10 @@ jobs:
           git config user.name "khatma-bot"
           git config user.email "bot@users.noreply.github.com"
           rm -f segment.mp3 segment.mp4
-          git add quran_progress.json
-          git diff --staged --quiet || git commit -m "progress: $(cat quran_progress.json | tr -d '\n ')"
+          if [ -f quran_progress.json ]; then
+            git add quran_progress.json
+            git diff --staged --quiet || git commit -m "progress: $(cat quran_progress.json | tr -d '\n ')"
+          else
+            echo "quran_progress.json غير موجود بعد (فشل التشغيل قبل إنشائه) — لا شيء لحفظه."
+          fi
           for i in 1 2 3; do git pull --rebase && git push && break || sleep 5; done
