@@ -28,7 +28,7 @@ from waveform_video import make_waveform_video
 # --------------------------------------------------------------------------
 # إعدادات — عدّل AUDIO_URL ليشير لرابط تحميل مباشر لملف Release الخاص بك
 # --------------------------------------------------------------------------
-AUDIO_URL = "https://github.com/USERNAME/REPO/releases/download/v1/khatma-alaa-aqel-full.mp3"
+AUDIO_URL = "https://github.com/hattabim17-dotcom/QURAN/releases/download/v1/Full_QURAN.mp3"
 
 BASE_DIR = Path(__file__).resolve().parent
 FONTS = {
