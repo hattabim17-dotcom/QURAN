@@ -1,0 +1,50 @@
+name: Khatma Alaa Aqel
+
+on:
+  schedule:
+    - cron: "0 6 * * *"
+    - cron: "0 13 * * *"
+    - cron: "0 20 * * *"
+  workflow_dispatch: {}
+
+concurrency:
+  group: khatma-publish
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+
+      - run: pip install -r requirements.txt
+
+      - name: Build and publish the next segment
+        env:
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python publish.py
+
+      - name: Commit progress only
+        if: always()
+        run: |
+          git config user.name "khatma-bot"
+          git config user.email "bot@users.noreply.github.com"
+          rm -f segment.mp3 segment.mp4
+          git add quran_progress.json
+          git diff --staged --quiet || git commit -m "progress: $(cat quran_progress.json | tr -d '\n ')"
+          for i in 1 2 3; do git pull --rebase && git push && break || sleep 5; done
